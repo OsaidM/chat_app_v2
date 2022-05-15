@@ -55,23 +55,25 @@ const Chat = (props) => {
           <h3>
             User's List
           </h3>
+          <ul className="users-list">
             {users&& users.map((val, key)=>{
               console.log(users)
               return (
-                <div key={key}>
+                <li key={key}>
                   - {val.username}
-                </div>
+                </li>
               )
             })}
+          </ul>
         </aside>
         <section>
-          <div className="chatContainer">
+          <div className="chat-container">
             <div className="messages">
               {messageList.map((val, key) => {
                 return (
                   <div
                     key = {key}
-                    className="messageContainer"
+                    className="message-container"
                     id={val.author === name ? "You" : "Other"}
                   >
                     <div key = {key} className="messageIndividual">
@@ -81,18 +83,17 @@ const Chat = (props) => {
                 );
               })}
             </div>
-
-          </div>
-          <div className="messageInputs">
-            <input
-              type="text"
-              placeholder="Message..."
-              onChange={(e) => {
-                setMessage(e.target.value);
-              }}
-              value={message}
-            />
-            <button onClick={sendMessage}>Send</button>
+            <div className="message-inputs">
+              <input
+                type="text"
+                placeholder="Message..."
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                }}
+                value={message}
+              />
+              <button onClick={sendMessage}>Send</button>
+            </div>
           </div>
         </section>
       </main>

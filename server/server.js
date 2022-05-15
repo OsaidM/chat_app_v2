@@ -3,11 +3,12 @@ const socket = require("socket.io");
 const app = express();
 const cors = require("cors");
 const {createPlayer, removePlayer, getListOfUsers} = require("./utils");
+// const {startGame} = require("./game");
 app.use(cors());
 app.use(express.json());
 
 /**
- * @fileoverview server file contains initiation of the server and the socket.
+ * @fileoverview erver file contains initiation of the server and the socket.
  * @package express, socket, cors.
  */
 
