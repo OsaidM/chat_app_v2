@@ -1,31 +1,41 @@
-import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import React, { useState, useEffect, navigate } from "react";
+import {Link} from "@reach/router"
 import io from "socket.io-client";
+
 const Chat = (props) => {
     const {room, name} = props;
-    const [socket] = useState(()=>io(":8000"));
+    const [socket] = useState(()=> io(":8000"));
     // After Login
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
     const [users, setUsers] = useState([]);
-    const [loggedIn, setLoggedIn]= useState(false);
-
+    const [getCurrentUser, setCurrentUser] = useState({id:socket.id, username:name, room});
+    
     useEffect(() => {
-      socket.emit("join_room", {username:name, room},  (res) => {
-        console.log("inside the emit", res.status);
-        setUsers(res.users);
-      })
+      if(!socket){
+        
+        navigate(`/`)
+      }
+      
+      socket.on("connect", () => {
+        console.log({id:socket.id, username:name, room});
+        socket.emit("join_room", {id:socket.id, username:name, room},  (res) => {
+          setUsers(res.users);
+          setCurrentUser({id:socket.id, username:name, room})
+        })
+      });
+
+
       socket.on("welcome_message", (data) => {
         console.log(data);
-        
         setUsers(data);
       });
       
       return () => {
-        socket.off();
-        socket.on("disconnect", {username:name, room});
-        socket.disconnect(true)};
-    },[socket, name, room]);
+        socket.emit("remove_player", {id:socket.id, username:name, room});
+        socket.disconnect()
+      };
+    },[ socket, name, room]);
       
 
     socket.on("receive_message", (data) => {
@@ -44,11 +54,11 @@ const Chat = (props) => {
         },
       };
       await socket.emit("send_message", messageContent);
-      setMessageList([...messageList, messageContent.content]);
+      setMessageList([...messageList, messageContent]);
       setMessage("");
 
     };
-      console.log("these usersssss",users)
+      
     return (
       <main>
         <aside>
@@ -57,7 +67,6 @@ const Chat = (props) => {
           </h3>
           <ul className="users-list">
             {users&& users.map((val, key)=>{
-              console.log(users)
               return (
                 <li key={key}>
                   - {val.username}
@@ -74,10 +83,17 @@ const Chat = (props) => {
                   <div
                     key = {key}
                     className="message-container"
-                    id={val.author === name ? "You" : "Other"}
+                    id={
+                      val.content.author === name ? "You"
+                      : val.content.author === "Server"? "Server"
+                      : "Other"
+                      // val.author === name ? "You" : val.author === "server"? "server":"Other"
+                    }
                   >
                     <div key = {key} className="messageIndividual">
-                      {val.author}: {val.message}
+                      {val.content.author === "Server" ? "":`${val.content.author}: `}
+                      
+                      {val.content.message} 
                     </div>
                   </div>
                 );
@@ -96,6 +112,7 @@ const Chat = (props) => {
             </div>
           </div>
         </section>
+        <Link to="/" style={{"width":"100px", "height":"20px"}}>Logout</Link>
       </main>
     )
 }

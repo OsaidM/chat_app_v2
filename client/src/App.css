@@ -162,3 +162,13 @@ aside h3{
 .users-list li::marker{
   content: "🧑";
 }
+
+#Server{
+  font-size: small;
+
+}
+
+#Server .messageIndividual {
+  background-color: white;
+  color: grey;
+}

@@ -1,29 +1,25 @@
-const express = require("express");
-const socket = require("socket.io");
-const app = express();
-const cors = require("cors");
+const express = require('express')
+const app = express()
+const cors = require("cors")
+const socket = require("socket.io")
 const {createPlayer, removePlayer, getListOfUsers} = require("./utils");
-// const {startGame} = require("./game");
-app.use(cors());
-app.use(express.json());
-
-/**
- * @fileoverview erver file contains initiation of the server and the socket.
- * @package express, socket, cors.
- */
-
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+app.use(cors())
+app.use(express.json())
 const server = app.listen("8000", () => {
-  // starting the server by listening to port 8000
-  console.log("Server Running on Port 8000...");
-});
+  console.log(`Example app listening at http://localhost:8000`)
+})
 
-app.get("/users", (req, res) => {
-  console.log(getListOfUsers())
-  res.json({ "users": getListOfUsers() });
-});
 
 //initiating the socket
-io = socket(server);
+const io = socket(server,{
+  cors:{
+    origin:true,
+    credentials:true
+  }
+});
 
 io.on("connection", (socket) => {
   /**
@@ -32,7 +28,7 @@ io.on("connection", (socket) => {
    */
   socket.on("join_room", (data, callback) => {
     socket.join(data.room);
-    createPlayer(data.username, data.room)
+    createPlayer(data.id, data.username, data.room)
     console.log("User Joined Room: " + data);
     console.log(getListOfUsers());
     socket.to(data.room).emit("welcome_message", getListOfUsers());
@@ -44,14 +40,26 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    console.log(data);
+    console.log(data); // shows message recieved from client
     socket.to(data.room).emit("receive_message", data.content);
   });
 
-  socket.on("disconnect", (data) => {
-    removePlayer(data.username, data.room)
-    console.log(getListOfUsers());
-    socket.to(data.room).emit("welcome_message", getListOfUsers()); 
+  socket.on("remove_player",(data)=>{
+    console.log("Id before removing: ", data.id);// shows the new list
+    removePlayer(data.id, data.username, data.room);
+    socket.to(data.room).emit("welcome_message", getListOfUsers());// send back the new list after removing a user
+    console.log("after removing: ", getListOfUsers());// shows the new list
+    
+    socket.to(data.room).emit("receive_message", {
+        room: data.room,
+        content: {
+          author: "Server",
+          message:`${data.username}: has been disconnected from room`
+        }
+    });
+  })
+  socket.on("disconnect", (data) => {// if a client disconnected then remove the handshake from the sockets arrray
+    socket.disconnect()
     console.log("USER DISCONNECTED");
   });
 });

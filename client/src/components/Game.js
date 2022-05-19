@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+// import axios from 'axios';
 import io from "socket.io-client";
 const Chat = (props) => {
     const {room, name} = props;

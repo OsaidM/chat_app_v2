@@ -7,14 +7,14 @@
 ///////////////
 let users = [];
 
-const isNotInside = (user, username)=> {
+const isNotInside = (user, id)=> {
     /** 
-     * takes user as object and username string,
+     * takes user as object and id string,
      * if is inside users array don't add if not then add and return the user object 
      */
     let status = true;
     for(let i = 0; i < users.length; i++){
-        if(users[i].username === username){
+        if(users[i].id === id){
             status = false;
             break;
         }
@@ -25,13 +25,13 @@ const isNotInside = (user, username)=> {
     return user;
 }
 
-const createPlayer = (username,room)=>{
+const createPlayer = (id, username,room)=>{
     /**
      * takes username string and room object and insert the player into the users array,
      * and returns list of users
      */
-    const user = {username, room};
-    isNotInside(user, username);
+    const user = {id, username, room};
+    isNotInside(user, id);
     return users;
 }
 
@@ -39,13 +39,13 @@ const getListOfUsers = ()=>{
     return users
 }
 
-const removePlayer = (username,room)=>{
+const removePlayer = (id, username, room)=>{
     /**
      * takes username string and room object return the final users list after deleting user
      */
     let newUsers = users.filter((val,key)=>{
         console.log(key)
-        return val.username !== username && val.room !== room
+        return val.id !== id 
     })
     users = newUsers;
     return users;

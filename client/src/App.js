@@ -8,9 +8,7 @@ import Main from "./components/Main"
 function App() {
 
   const connectToRoom = (room,username) => {
-
     navigate(`chat/${room}/${username}`)
-
   };
 
   return (
