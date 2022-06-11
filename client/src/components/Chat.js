@@ -1,6 +1,7 @@
-import React, { useState, useEffect, navigate } from "react";
-import {Link} from "@reach/router"
+import React, { useState, useEffect } from "react";
+import {Link, navigate} from "@reach/router"
 import io from "socket.io-client";
+
 
 const Chat = (props) => {
     const {room, name} = props;
@@ -12,14 +13,12 @@ const Chat = (props) => {
     const [getCurrentUser, setCurrentUser] = useState({id:socket.id, username:name, room});
     
     useEffect(() => {
-      if(!socket){
-        
-        navigate(`/`)
-      }
-      
       socket.on("connect", () => {
         console.log({id:socket.id, username:name, room});
         socket.emit("join_room", {id:socket.id, username:name, room},  (res) => {
+          if(res.status == "ROOM_FULL"){
+            return navigate("/")
+          }
           setUsers(res.users);
           setCurrentUser({id:socket.id, username:name, room})
         })
@@ -37,6 +36,12 @@ const Chat = (props) => {
       };
     },[ socket, name, room]);
       
+    window.onbeforeunload = function(event) { 
+      // since closing the window of chat doesnt invoke onComponentDidUnmount state 
+      // then this is a way to invoke socket desconnection to the server
+      socket.emit("remove_player", {id:socket.id, username:name, room});
+      socket.disconnect()
+    };
 
     socket.on("receive_message", (data) => {
         setMessageList([...messageList, data]);
@@ -58,7 +63,13 @@ const Chat = (props) => {
       setMessage("");
 
     };
-      
+    
+    const closeRoom = async()=>{
+      await socket.emit("close_room", getCurrentUser);
+
+      navigate("/")
+    }
+
     return (
       <main>
         <aside>
@@ -80,7 +91,10 @@ const Chat = (props) => {
             <div className="messages">
               {messageList.map((val, key) => {
                 return (
-                  <div
+                  <>
+                  {
+                  "content" in val &&
+                    <div
                     key = {key}
                     className="message-container"
                     id={
@@ -89,13 +103,15 @@ const Chat = (props) => {
                       : "Other"
                       // val.author === name ? "You" : val.author === "server"? "server":"Other"
                     }
-                  >
-                    <div key = {key} className="messageIndividual">
-                      {val.content.author === "Server" ? "":`${val.content.author}: `}
-                      
-                      {val.content.message} 
+                    >
+                      <div key = {key} className="messageIndividual">
+                        {val.content.author === "Server" ? "":`${val.content.author}: `}
+                        
+                        {val.content.message} 
+                      </div>
                     </div>
-                  </div>
+                  }
+                  </>
                 );
               })}
             </div>
@@ -112,6 +128,7 @@ const Chat = (props) => {
             </div>
           </div>
         </section>
+        <button onClick={()=>closeRoom()}>Close Room</button>
         <Link to="/" style={{"width":"100px", "height":"20px"}}>Logout</Link>
       </main>
     )
