@@ -2,9 +2,9 @@ const express = require('express')
 const app = express()
 const cors = require("cors")
 const socket = require("socket.io")
-const {createPlayer, removePlayer, getListOfUsersByRoomId,
+const {getListOfUsersByRoomId,
    getListOfRooms, createRoom, getRoomById, 
-   removeRoomById, removePlayerFromRoom, addPlayerToRoom
+   removeRoomById, removePlayerFromRoom
   } = require("./utils");
 
 
@@ -36,11 +36,8 @@ io.on("connection", (socket) => {
     socket.roomId = data.room;
     socket.join(data.room);
     
-    
-
-    // const newPlayer = createPlayer(data.id, data.username, data.room);
-    const newwPlayer = {id:data.id, username:data.username, room:data.room}
-    const newRoom = createRoom(data.room, data.username, true, newwPlayer);
+    const newUser = {id:data.id, username:data.username, room:data.room}
+    const newRoom = createRoom(data.room, data.username, true, newUser);
 
     if(getRoomById(socket.roomId).players.length > 2){
       callback({
@@ -50,8 +47,6 @@ io.on("connection", (socket) => {
       return;
     }
     
-
-    // console.log('Game created! ID: ', socket.id);
     socket.to(socket.roomId).emit("welcome_message", getListOfUsersByRoomId(socket.roomId));
     callback({
       status: "ok",
@@ -62,12 +57,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    // console.log(data); // shows message recieved from client
     socket.to(data.room).emit("receive_message", data);
   });
 
   socket.on("close_room",(data)=>{
-    // console.log("Id before removing: ", data.id);
     if (!getRoomById(data.room)) return
     if(data.username == getRoomById(data.room).host){
       removeRoomById(data.room);
@@ -84,12 +77,8 @@ io.on("connection", (socket) => {
   })
 
   socket.on("remove_player",(data)=>{
-    // console.log("Id before removing: ", data.id);// shows the new list
-    removePlayer(data.id, data.username, data.room);
     removePlayerFromRoom(data.id, data.username, data.room);
     socket.to(data.room).emit("welcome_message", getListOfUsersByRoomId(data.room));// send back the new list after removing a user
-    // console.log("after removing: ", getListOfUsersByRoomId(data.room));// shows the new list
-    // console.log("room length ",getRoomById(data.room).length)
     getListOfUsersByRoomId(data.room) && getListOfUsersByRoomId(data.room).length <2 && socket.to(data.room).emit("receive_message", {
         room: data.room,
         content: {
@@ -98,7 +87,7 @@ io.on("connection", (socket) => {
         }
     });
   })
-  socket.on("disconnect", (data) => {// if a client disconnected then remove the handshake from the sockets arrray
+  socket.on("disconnect", () => {// if a client disconnected then remove the handshake from the sockets arrray
     socket.disconnect()
     console.log("USER DISCONNECTED");
   });
