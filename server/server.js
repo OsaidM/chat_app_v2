@@ -77,6 +77,7 @@ io.on("connection", (socket) => {
   })
 
   socket.on("remove_player",(data)=>{
+    console.log("player closed the window")
     removePlayerFromRoom(data.id, data.username, data.room);
     socket.to(data.room).emit("welcome_message", getListOfUsersByRoomId(data.room));// send back the new list after removing a user
     getListOfUsersByRoomId(data.room) && getListOfUsersByRoomId(data.room).length <2 && socket.to(data.room).emit("receive_message", {
