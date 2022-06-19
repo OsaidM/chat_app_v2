@@ -1,8 +1,20 @@
 import React,{useState} from 'react'
+import axios from "axios";
 import "./style_join.css"
-const Join = ({connectToRoom}) => {
+const Join = ({joinRoom}) => {
     const [userName, setUserName] = useState("");
     const [room, setRoom] = useState("");
+    const [err, setErr] = useState("");
+
+    const check_and_join = ()=>{
+        axios.post('http://localhost:8000/get-room',{room}).then(res=>{
+          console.log(res.data)
+          joinRoom(room, userName)
+        }).catch(err=>{
+          console.log(err.response.data)
+          setErr(err.response.data);
+        })
+    }
 
   return (
     <main>
@@ -25,11 +37,14 @@ const Join = ({connectToRoom}) => {
                 <div className="join-button-rounds join-shadow">
                     <div className="join-button join" onClick={(e)=>{
                         return (e.preventDefault, 
-                            connectToRoom(room, userName)
+                            check_and_join()
                         )}}>
                         <p>Join Room</p>
                     </div>
                 </div>
+            <div className='error'>
+                {err}
+            </div>
             </div>
         </section>
     </main>

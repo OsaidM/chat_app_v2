@@ -11,13 +11,14 @@ const getListOfUsersByRoomId = (roomId)=>{
     return rooms[roomId] && rooms[roomId].players
 }
 
-const createRoom = (roomId, username, isOpen = true, newPlayer)=>{
+const createRoom = (roomId, username, isOpen = true, newPlayer, roomSize)=>{
 
     if (!rooms[roomId]) {
         rooms[roomId] = {}
         rooms[roomId].host = username;
         rooms[roomId].isOpen = isOpen;
         rooms[roomId].players = [];
+        rooms[roomId].roomSize = roomSize;
     }
     addPlayerToRoom(newPlayer.id, newPlayer.username, newPlayer.room);
     console.log("from create function",rooms[roomId]);

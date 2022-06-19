@@ -7,10 +7,27 @@ const {getListOfUsersByRoomId,
    removeRoomById, removePlayerFromRoom
   } = require("./utils");
 
+app.use(express.json()); // This is new
+app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
 
-app.get('/', (req, res) => {
+
+app.post('/get-room', async (req, res) => {
+  const roomExists = await getRoomById(req.body['room'])
+  console.log(roomExists);
+  // res.send('Hello World!')
+  if(!roomExists){
+    
+    return res.status(500).send("room does not exist!")
+  }
   res.send('Hello World!')
+
 })
+
+
 app.use(cors())
 app.use(express.json())
 const server = app.listen("8000", () => {
@@ -35,11 +52,11 @@ io.on("connection", (socket) => {
     socket.username = data.username;
     socket.roomId = data.room;
     socket.join(data.room);
-    
+    console.log("room size: ",data.room_size)
     const newUser = {id:data.id, username:data.username, room:data.room}
-    const newRoom = createRoom(data.room, data.username, true, newUser);
-
-    if(getRoomById(socket.roomId).players.length > 2){
+    const newRoom = createRoom(data.room, data.id, true, newUser, parseInt(data.room_size));
+    const getRoomId = getRoomById(socket.roomId)
+    if(getRoomId.players.length-1 >= getRoomId.roomSize){
       callback({
         status: "ROOM_FULL",
         room:getRoomById(socket.roomId)
@@ -62,9 +79,9 @@ io.on("connection", (socket) => {
 
   socket.on("close_room",(data)=>{
     if (!getRoomById(data.room)) return
-    if(data.username == getRoomById(data.room).host){
+    if(data.id == getRoomById(data.room).host){
       removeRoomById(data.room);
-      socket.to(data.room).emit("receive_message", {
+      socket.to(data.room).emit("host_closed_room", {
           room: data.room,
           content: {
             author: "Server",
@@ -72,7 +89,7 @@ io.on("connection", (socket) => {
           }
       });
     }
-
+    
 
   })
 

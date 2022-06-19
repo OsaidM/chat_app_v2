@@ -1,9 +1,9 @@
 import React,{useState} from 'react'
 import "./style_create.css"
-const Create = ({connectToRoom}) => {
+const Create = ({createRoom}) => {
     const [room, setRoom] = useState("");
     const [userName, setUserName] = useState("");
-    const [roomSize, setRoomSize] = useState("");
+    const [roomSize, setRoomSize] = useState(null);
 
   return (
     <main>
@@ -34,7 +34,7 @@ const Create = ({connectToRoom}) => {
                 <div className="create-button-rounds create-shadow">
                     <div className="create-button create" onClick={(e)=>{
                         return (e.preventDefault, 
-                            connectToRoom(room, userName, roomSize)
+                            createRoom(room, userName, roomSize)
                         )}}>
                         <p>Create Room</p>
                     </div>

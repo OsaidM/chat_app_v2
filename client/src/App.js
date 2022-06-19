@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // import "./App.css";
 import {Router, navigate} from "@reach/router"
 // import Chat from "./components/Chat"
@@ -9,14 +9,23 @@ import Create from "./components/create_component/Create";
 import Join from "./components/join_component/Join";
 
 function App() {
-
-  const connectToRoom = (room,username, roomsize=null) => {
+  const [roomSize,setRoomSize] =useState();
+  const createRoom = (room,username, roomsize) => {
+    setRoomSize(roomsize);
     roomsize === null ?
-    navigate(`/chat/${room}/${username}`)
+    navigate(`/create/room`)
     :
     navigate(`/chat/${room}/${username}`)
   };
-  const pick_choice = (choice)=>
+  
+  const joinRoom = (room,username) => {
+
+    navigate(`/chat/${room}/${username}`)
+
+  };
+
+
+  const pick_a_choice = (choice)=>
   {return(
     choice && choice === "CREATE"?
     navigate(`/create/room`)
@@ -28,10 +37,10 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Index path="/" pick_choice={pick_choice}/>
-        <Create path="/create/room" connectToRoom={connectToRoom}/>
-        <Join path="/join/room" connectToRoom={connectToRoom}/> 
-        <Chat path="/chat/:room/:name"/>
+        <Index path="/" pick_choice={pick_a_choice}/>
+        <Create path="/create/room" createRoom={createRoom}/>
+        <Join path="/join/room" joinRoom={joinRoom}/> 
+        <Chat path="/chat/:room/:name" room_size = {roomSize}/>
       </Router>
     </div>
   );

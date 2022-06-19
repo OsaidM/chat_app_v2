@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./style_chat.css"
 import {Link, navigate} from "@reach/router"
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 const Chat = (props) => {
 
-    const {room, name} = props;
+    const {room, name, room_size} = props;
     const [socket] = useState(()=> io(":8000"));
     // After Login
     const [message, setMessage] = useState("");
@@ -12,16 +12,16 @@ const Chat = (props) => {
     const [users, setUsers] = useState([]);
     const [getCurrentUser, setCurrentUser] = useState({id:socket.id, username:name, room});
     
-
+    console.log(getCurrentUser.host)
     useEffect(() => {
         socket.on("connect", () => {
           console.log({id:socket.id, username:name, room});
-          socket.emit("join_room", {id:socket.id, username:name, room},  (res) => {
+          socket.emit("join_room", {id:socket.id, username:name, room, room_size},  (res) => {
             if(res.status === "ROOM_FULL"){
               return navigate("/")
             }
             setUsers(res.users);
-            setCurrentUser({id:socket.id, username:name, room})
+            setCurrentUser({id:socket.id, username:name, room, host:res.room.host === socket.id?true:false})
           })
         });
   
@@ -30,6 +30,11 @@ const Chat = (props) => {
           console.log(data);
           setUsers(data);
         });
+
+        socket.on("host_closed_room", (data) => {
+          navigate(`/`)
+        });
+
         window.addEventListener("beforeunload", e=>{
           socket.emit("remove_player", {id:socket.id, username:name, room});
           socket.disconnect()
@@ -69,7 +74,6 @@ const Chat = (props) => {
   
         navigate("/")
       }
-
   return (
     <main>
         <section className="chat-section">
@@ -80,7 +84,7 @@ const Chat = (props) => {
                     <div className="left-header">
                         <div className="chat-button-rounds logout-shadow">
                             <div className="chat-button logout" onClick={()=>closeRoom()}>
-                                <p>Logout</p>
+                                <p>{getCurrentUser.host?"Close Room":"Logout"}</p>
                             </div>
                         </div>
                     </div>
@@ -117,7 +121,7 @@ const Chat = (props) => {
                             : "row-left"
                             }
                             >
-                                <div key={idx} className={
+                                <div key={idx+val.content.author} className={
                                   val.content.author === name ?"box3 sb13 box-position-right"
                                   :
                                   val.content.author === "Server"?""
