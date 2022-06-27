@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./style_chat.css"
 import {Link, navigate} from "@reach/router"
-import io, { Socket } from "socket.io-client";
+import io from "socket.io-client";
 const Chat = (props) => {
 
     const {room, name, room_size} = props;
@@ -77,16 +77,17 @@ const Chat = (props) => {
   return (
     <main>
         <section className="chat-section">
-            <h1 className="chat-h">Welcome {name}</h1>
-            <header className="chat-header"></header>
+            <header className="chat-header">
+              <h1 className="chat-h">Welcome {name}</h1>
+              <div className="chat-header-background"></div>
+            </header>
             <div className="chat-content">
                 <div className="left">
                     <div className="left-header">
-                        <div className="chat-button-rounds logout-shadow">
                             <div className="chat-button logout" onClick={()=>closeRoom()}>
-                                <p>{getCurrentUser.host?"Close Room":"Logout"}</p>
+                                {getCurrentUser.host?"Close Room":"Logout"}
                             </div>
-                        </div>
+                        <div className="chat-button-rounds logout-shadow"></div>
                     </div>
                     <div className="left-body">
                         <div className="header">
@@ -124,7 +125,7 @@ const Chat = (props) => {
                                 <div key={idx+val.content.author} className={
                                   val.content.author === name ?"box3 sb13 box-position-right"
                                   :
-                                  val.content.author === "Server"?""
+                                  val.content.author === "Server"?"notification"
                                   : "box3 box4 sb14 box-position-left"
                                   }>
                                     {val.content.author === "Server" ? "":`${val.content.author}: `}
@@ -147,8 +148,7 @@ const Chat = (props) => {
                             <div className="chat-glass-shadow chat-shadow-width"></div>
                         </div>
                         <div className="send-button-rounds">
-                            <button className="send-button">
-                              <h6>Send</h6>
+                            <button className="send-button">Send
                             </button>   
                             <div className="send-glass-shadow"></div>
                         </div>

@@ -35,7 +35,7 @@ const server = app.listen("8000", () => {
 })
 
 
-//initiating the socket
+//initiating the socket with Cors
 const io = socket(server,{
   cors:{
     origin:true,
@@ -68,8 +68,15 @@ io.on("connection", (socket) => {
     callback({
       status: "ok",
       room:getRoomById(socket.roomId),
-      users: getListOfUsersByRoomId(socket.roomId)
+      users: getListOfUsersByRoomId(socket.roomId),
     });
+    socket.to(data.room).emit("receive_message", {
+      room: data.room,
+      content: {
+        author: "Server",
+        message:`${data.username}: joined the Room room`
+      }
+  });
     
   });
 
@@ -97,7 +104,9 @@ io.on("connection", (socket) => {
     console.log("player closed the window")
     removePlayerFromRoom(data.id, data.username, data.room);
     socket.to(data.room).emit("welcome_message", getListOfUsersByRoomId(data.room));// send back the new list after removing a user
-    getListOfUsersByRoomId(data.room) && getListOfUsersByRoomId(data.room).length <2 && socket.to(data.room).emit("receive_message", {
+    getListOfUsersByRoomId(data.room) 
+    && getListOfUsersByRoomId(data.room).length <2 
+    && socket.to(data.room).emit("receive_message", {
         room: data.room,
         content: {
           author: "Server",
