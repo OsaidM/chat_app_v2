@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import "./style_create.css"
+import ChatHeader from '../ChatHeader'
 const Create = ({createRoom}) => {
     const [room, setRoom] = useState("");
     const [userName, setUserName] = useState("");
@@ -7,37 +7,38 @@ const Create = ({createRoom}) => {
 
   return (
     <main>
-        <section className='create-section'>
-            <h1 className='create-header-h'>Create Room</h1>
-            <header className='create-header'></header>
+        <section className='chat-section'>
+            <ChatHeader header_content={"Create Room"}/>
             <div className="create-content">
                 <div className="col">
                     <div className="create-text-rounds">
-                        <input type="text" name="username" className="room-id" placeholder="User Name" onChange={(e) => {
+                        <input type="text" name="username" className="create-room-id" placeholder="User Name" onChange={(e) => {
                             setUserName(e.target.value);
                         }}/>
                         <div className="create-glass-shadow shadow-width"></div>
                     </div>
                     <div className="create-text-rounds">
-                        <input type="text" name="room-id" className="room-id" placeholder="Room ID" onChange={(e) => {
+                        <input type="text" name="create-room-id" className="create-room-id" placeholder="Room ID" onChange={(e) => {
                             setRoom(e.target.value);
                         }}/>
-                        <div className="create-glass-shadow shadow-width"></div>
+                        <div className="create-glass-shadow"></div>
                     </div>
                     <div className="create-text-rounds">
-                        <input type="number" name="room-size" className="room-id" placeholder="2" onChange={(e) => {
+                        <input type="number" name="room-size" className="create-room-id" placeholder="2" onChange={(e) => {
                             setRoomSize(e.target.value);
                         }}/>
                         <div className="create-glass-shadow shadow-width"></div>
                     </div>
                 </div>
-                <div className="create-button-rounds create-shadow">
+                <div className="create-button-rounds">
                     <div className="create-button create" onClick={(e)=>{
                         return (e.preventDefault, 
                             createRoom(room, userName, roomSize)
                         )}}>
-                        <p>Create Room</p>
+                        Create Room
                     </div>
+                    <div className="create-shadow"></div>
+
                 </div>
             </div>
         </section>

@@ -14,31 +14,10 @@ main{
     flex-direction: column;
     padding-bottom: 50px;
 }
-.chat-header{
-    width: 90vw;
-    height: 15vh;
-    position: relative;
-}
-.chat-h{
-    font-size: 36px;
-    color: #0b5cd5a2;
-    position: absolute;
-    left:50%;
-    top:50%;
-    margin: 0;
-    transform: translate(-50%,-50%);
-}
-.chat-header-background{
-    background-image: linear-gradient(to right, #000000ff,#000000ff,#0000004d,#0000004d,#0000004d,#0000004d,#000000ff,#000000ff);
-    mix-blend-mode: overlay;
-    width: 90vw;
-    min-height: 15vh;
-    position: absolute;
-}
 
 .chat-content{
     border-radius: 26px;
-    height: 70vh;
+    height: 60vh;
     width: 80vw;
     display: flex;
     justify-content: space-between;

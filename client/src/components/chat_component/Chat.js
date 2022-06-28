@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./style_chat.css"
 import {Link, navigate} from "@reach/router"
 import io from "socket.io-client";
+import ChatHeader from "../ChatHeader";
 const Chat = (props) => {
 
     const {room, name, room_size} = props;
@@ -77,16 +78,13 @@ const Chat = (props) => {
   return (
     <main>
         <section className="chat-section">
-            <header className="chat-header">
-              <h1 className="chat-h">Welcome {name}</h1>
-              <div className="chat-header-background"></div>
-            </header>
+            <ChatHeader header_content={"Welcome " + name}/>
             <div className="chat-content">
                 <div className="left">
                     <div className="left-header">
-                            <div className="chat-button logout" onClick={()=>closeRoom()}>
-                                {getCurrentUser.host?"Close Room":"Logout"}
-                            </div>
+                        <div className="chat-button logout" onClick={()=>closeRoom()}>
+                            {getCurrentUser.host?"Close Room":"Logout"}
+                        </div>
                         <div className="chat-button-rounds logout-shadow"></div>
                     </div>
                     <div className="left-body">

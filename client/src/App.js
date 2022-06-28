@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-// import "./App.css";
+import "./App.css";
 import {Router, navigate} from "@reach/router"
 // import Chat from "./components/Chat"
 import Chat from "./components/chat_component/Chat";
-import Main from "./components/Main"
 import Index from "./components/index_component/Index";
 import Create from "./components/create_component/Create";
 import Join from "./components/join_component/Join";

@@ -1,24 +1,36 @@
 .index-section{
     background-color: #a8cbfeff;
-    width:1366px;
-    height: 100%;
-    text-align: center;
+    width:90vw;
+    height:90vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 50px;
+}
+
+.index-header{
+    width: 90vw;
+    height: 15vh;
     position: relative;
 }
+
 .index-h{
-    font-size: 72px;
-    color: #0b5cd580;
+    font-size: 36px;
+    color: #0b5cd5a2;
     position: absolute;
-    left:25%;
-    z-index: 1;
+    left:50%;
+    top:50%;
+    margin: 0;
+    transform: translate(-50%,-50%);
 }
-.index-header{
+
+.index-header-background{
     background-image: linear-gradient(to right, #000000ff,#000000ff,#0000004d,#0000004d,#0000004d,#0000004d,#000000ff,#000000ff);
     mix-blend-mode: overlay;
-    width: 100%;
-    height: 200px;
+    width: 90vw;
+    min-height: 15vh;
     position: absolute;
-    z-index: 1;
 }
 
 .content{
