@@ -1,6 +1,5 @@
 import React from 'react'
 import ChatHeader from '../ChatHeader'
-import "./index.css"
 
 const Index = ({pick_choice}) => {
 
