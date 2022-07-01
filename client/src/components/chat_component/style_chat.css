@@ -21,11 +21,12 @@ main{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 15px;
 }
 
 .left{
     height: 100%;
-    width: 20%;
+    width: 25%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -33,8 +34,10 @@ main{
 
 .left-header{
     border-radius: 26px;
-    height: 10%;
+    height: 15%;
+    width: 90%;
     position: relative;
+    margin: 0 auto;
 }
 
 .left-body{
@@ -135,7 +138,7 @@ main{
     transform: translate(-50%, -50%);
     border-radius: 26px;
     z-index: 1;
-    font-size: 28px;
+    font-size: 18px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -146,7 +149,7 @@ main{
     background-color: #f33c6188;
 }
 .chat-button-rounds{
-    background-color: #0b5cd580;
+    background-color: #e7768180;
     border-radius: 26px;
     width: 100%;
     height: 100%;

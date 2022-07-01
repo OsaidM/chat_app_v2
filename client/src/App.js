@@ -35,12 +35,14 @@ function App() {
   )}
   return (
     <div className="App">
-      <Router>
-        <Index path="/" pick_choice={pick_a_choice}/>
-        <Create path="/create/room" createRoom={createRoom}/>
-        <Join path="/join/room" joinRoom={joinRoom}/> 
-        <Chat path="/chat/:room/:name" room_size = {roomSize}/>
-      </Router>
+      <main>
+        <Router style={{width:'inherit', height:'inherit'}}>
+          <Index path="/" pick_choice={pick_a_choice}/>
+          <Create path="/create/room" createRoom={createRoom}/>
+          <Join path="/join/room" joinRoom={joinRoom}/> 
+          <Chat path="/chat/:room/:name" room_size = {roomSize}/>
+        </Router>
+      </main>
     </div>
   );
 }

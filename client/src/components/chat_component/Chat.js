@@ -76,86 +76,84 @@ const Chat = (props) => {
         navigate("/")
       }
   return (
-    <main>
-        <section className="chat-section">
-            <ChatHeader header_content={"Welcome " + name}/>
-            <div className="chat-content">
-                <div className="left">
-                    <div className="left-header">
-                        <div className="chat-button logout" onClick={()=>closeRoom()}>
-                            {getCurrentUser.host?"Close Room":"Logout"}
-                        </div>
-                        <div className="chat-button-rounds logout-shadow"></div>
+    <section className="chat-section">
+        <ChatHeader header_content={"Welcome " + name}/>
+        <div className="chat-content">
+            <div className="left">
+                <div className="left-header">
+                    <div className="chat-button logout" onClick={()=>closeRoom()}>
+                        {getCurrentUser.host?"Close Room":"Logout"}
                     </div>
-                    <div className="left-body">
-                        <div className="header">
-                            <div className="panel-header-text">
-                                {room}
-                            </div>
-                        </div>
-                            
-                        <ul>
-                            {users&& users.map((val, key)=>{
-                            return (
-                                <li key={key}>
-                                - {val.username}
-                                </li>
-                            )
-                            })}
-                        </ul>
-                    </div>
+                    <div className="chat-button-rounds logout-shadow"></div>
                 </div>
-                <div className="right">
-                    <div className="chat-box">
-                    {messageList.map((val, idx) => {
+                <div className="left-body">
+                    <div className="header">
+                        <div className="panel-header-text">
+                            {room}
+                        </div>
+                    </div>
+                        
+                    <ul>
+                        {users&& users.map((val, key)=>{
                         return (
-                        <>
-                        {
-                        "content" in val &&
-                            <div
-                            key={idx}
-                            className={
-                            val.content.author === name ? "row-right"
-                            : val.content.author === "Server"? "Server"
-                            : "row-left"
-                            }
-                            >
-                                <div key={idx+val.content.author} className={
-                                  val.content.author === name ?"box3 sb13 box-position-right"
-                                  :
-                                  val.content.author === "Server"?"notification"
-                                  : "box3 box4 sb14 box-position-left"
-                                  }>
-                                    {val.content.author === "Server" ? "":`${val.content.author}: `}
-                                    
-                                    {val.content.message} 
-                                </div>
-                            </div>
-                        }
-                        </>
-                        );
-                    })}
-                    </div>
-                    <div className="chat-controls">
-                      <form onSubmit={sendMessage}>
-                        <div className="chat-text-rounds">
-                            <input type="text" name="message_box" className="chat-room-id" placeholder="Your Message" onChange={(e) => {
-                            setMessage(e.target.value);
-                            }}
-                            value={message}/>
-                            <div className="chat-glass-shadow chat-shadow-width"></div>
-                        </div>
-                        <div className="send-button-rounds">
-                            <button className="send-button">Send
-                            </button>   
-                            <div className="send-glass-shadow"></div>
-                        </div>
-                      </form>
-                    </div>
+                            <li key={key}>
+                            - {val.username}
+                            </li>
+                        )
+                        })}
+                    </ul>
                 </div>
             </div>
-        </section>
-    </main>
+            <div className="right">
+                <div className="chat-box">
+                {messageList.map((val, idx) => {
+                    return (
+                    <>
+                    {
+                    "content" in val &&
+                        <div
+                        key={idx}
+                        className={
+                        val.content.author === name ? "row-right"
+                        : val.content.author === "Server"? "Server"
+                        : "row-left"
+                        }
+                        >
+                            <div key={idx+val.content.author} className={
+                              val.content.author === name ?"box3 sb13 box-position-right"
+                              :
+                              val.content.author === "Server"?"notification"
+                              : "box3 box4 sb14 box-position-left"
+                              }>
+                                {val.content.author === "Server" ? "":`${val.content.author}: `}
+                                
+                                {val.content.message} 
+                            </div>
+                        </div>
+                    }
+                    </>
+                    );
+                })}
+                </div>
+                <div className="chat-controls">
+                  <form onSubmit={sendMessage}>
+                    <div className="chat-text-rounds">
+                        <input type="text" name="message_box" className="chat-room-id" placeholder="Your Message" onChange={(e) => {
+                        setMessage(e.target.value);
+                        }}
+                        value={message}/>
+                        <div className="chat-glass-shadow chat-shadow-width"></div>
+                    </div>
+                    <div className="send-button-rounds">
+                        <button className="send-button">Send
+                        </button>   
+                        <div className="send-glass-shadow"></div>
+                    </div>
+                  </form>
+                </div>
+            </div>
+        </div>
+    </section>
   )
 }
 
