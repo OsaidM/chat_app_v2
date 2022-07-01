@@ -1,5 +1,6 @@
 import React,{useState} from 'react'
 import axios from "axios";
+import ChatHeader from "../ChatHeader"
 import "./style_join.css"
 const Join = ({joinRoom}) => {
     const [userName, setUserName] = useState("");
@@ -19,32 +20,31 @@ const Join = ({joinRoom}) => {
   return (
     <main>
         <section className='join-section'>
-            <h1 className='join-h'>Join Room</h1>
-            <header className='join-header'></header>
+            <ChatHeader header_content={"Join Room"}/>
             <div className="join-content">
                 <div className="join-text-rounds">
                     <input type="text" name="username" id="join-room-id" placeholder="User Name" onChange={(e) => {
                             setUserName(e.target.value);
                         }}/>
-                    <div className="join-glass-shadow join-shadow-width"></div>
+                    <div className="join-glass-shadow"></div>
                 </div>
                 <div className="join-text-rounds">
                     <input type="text" name="room-id" id="join-room-id" placeholder="Room ID"onChange={(e) => {
                             setRoom(e.target.value);
                         }}/>
-                    <div className="join-glass-shadow join-shadow-width"></div>
+                    <div className="join-glass-shadow"></div>
                 </div>
-                <div className="join-button-rounds join-shadow">
-                    <div className="join-button join" onClick={(e)=>{
+                <div className="join-button-rounds">
+                    <div className="join-button" onClick={(e)=>{
                         return (e.preventDefault, 
                             check_and_join()
                         )}}>
                         <p>Join Room</p>
                     </div>
                 </div>
-            <div className='error'>
-                {err}
-            </div>
+                <div className='error'>
+                    {err}
+                </div>
             </div>
         </section>
     </main>
