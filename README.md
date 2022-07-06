@@ -1,2 +1,2 @@
-# chat_app_v2
-React application
+# chat_app_v2 _ React application
+
